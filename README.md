@@ -24,7 +24,7 @@ Edit this file (using nano, or your prefered text editor):
 sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
 ```
 
-After some setup values, each network's details will be in a network 'block'. A recommended configuration is below:
+After some setup values, each network's details will be in a network 'block'. A recommended configuration is below (and included in the files):
 ```shell
 country=AU
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
@@ -109,6 +109,40 @@ Save the file. The passwords are still accessable by pressing the up arrow.
 and reboot your Raspberry Pi (`sudo reboot`).
 
 ## Setting up a hostname
+https://thepihut.com/blogs/raspberry-pi-tutorials/19668676-renaming-your-raspberry-pi-the-hostname
+TODO: Expand this section
 
 ## Connecting to the hotspot
+The ssid of the hotspot is set to `penguinpi:xx:xx:xx` where `xx:xx:xx` will correspond to the end of your MAC address.
+If you wish to change this, edit the `/etc/hostapd/hostapd.conf` file and change the following option: `ssid=myNewHotSp0t`.
+The default password is `egb439123`. It can be also changed in the `hostapd.conf` file.
+The IP address of the robot will be `192.168.50.5`. This will also be the default gateway IP for any device connecting to the hotspot.
 
+## Using ethernet cable
+The ethernet port can be used. It will be assigned an IP address from the DHCP server. If you need the IP address to stay the same, it is highly recommended you don't use a static IP, but try using a hostname. 
+If you still must have a static IP address, do not edit the `/etc/network/interfaces` file. Since Raspian Jessie, you should use the `/etc/dhcpcd.conf` file to set a static IP address.
+Follow the instructions here: https://raspberrypi.stackexchange.com/questions/37920/how-do-i-set-up-networking-wifi-static-ip-address/74428#74428 
+
+If you want access the internet over the PenguinPis wifi hotspot (basically using the raspberry pi as a wifi router, you will have to enable IP forwarding.
+Edit the `sysctl.conf` file:
+```shell
+sudo nano /etc/sysctl.conf
+```
+look for the line
+```shell
+# Uncomment the next line to enable packet forwarding for IPv4
+#net.ipv4.ip_forward=1
+```
+and remove the # so it is
+```shell
+# Uncomment the next line to enable packet forwarding for IPv4
+net.ipv4.ip_forward=1
+```
+
+## Debugging wifi
+You may need a keyboard and screen if you can't remotely access the PenguinPi. 
+The state of the autohotspot service can be viewed with the command:
+```shell
+systemctl status autohotspot.service
+```
+Check this for any errors.
