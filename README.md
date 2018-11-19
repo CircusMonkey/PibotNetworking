@@ -83,15 +83,15 @@ network={
 	psk=bebb15a62c377f565f9e17280df9e2b9ece627325be93653c0b98556c9216f49
 }
 ```
- Update the `psk=` line in the `/etc/wpa_supplicant/wpa_supplicant.conf` file to the new value.
+Update the `psk=` line in the `/etc/wpa_supplicant/wpa_supplicant.conf` file to the new value.
 
- For the QUT enterprise network, hash your password with:
- ```bash
+For the QUT enterprise network, hash your password with:
+```shell
 echo -n 'YOUR_REAL_PASSWORD' | iconv -t utf16le | openssl md4
- ```
+```
 
 This will output 
-```bash
+```shell
 (stdin)= e5c53515388155f527917a9ee5231538
 ```
 
@@ -101,12 +101,11 @@ Save your changes to the `wpa_supplicant.conf` file.
 
 Now we need to erase the history so that noone can get your password by looking at the commands you typed.
 Find the history file and erase all lines containing your passwords.
-```bash
+```shell
 nano ~/.zsh_history
 ```
-Save the file. The passwords are still accessable by pressing the up arrow.
-
-and reboot your Raspberry Pi (`sudo reboot`).
+Save the file. The passwords are still accessable by pressing the up arrow until you close the terminal.
+Reboot your Raspberry Pi (`sudo reboot`).
 
 ## Setting up a hostname
 https://thepihut.com/blogs/raspberry-pi-tutorials/19668676-renaming-your-raspberry-pi-the-hostname
