@@ -1,10 +1,15 @@
 #!/bin/bash
 
-# Run this script with sudo!!!
+# Run this script with sudo
+echo $EUID
+if [ "$EUID" -ne 0 ]
+then 
+  echo "Please run as root"
+  exit 1
+fi
 
 # Using as a guide:
 # http://www.raspberryconnect.com/network/item/330-raspberry-pi-auto-wifi-hotspot-switch-internet
-
 
 echo "Installing required packages\n"
 sudo apt-get update
@@ -92,7 +97,7 @@ dhcp-range=192.168.50.150,192.168.50.200,255.255.255.0,12h
 # Revert the interfaces file back to default
 echo "Reverting interfaces file to default. (Backup to /etc/network/interfaces.backup)\n"
 
-sudo cp /etc/network/interfaces /etc/network/interfaces.backup
+sudo cp /etc/network/interfaces /etc/network/interfaces.backup # Backup old file
 sudo echo "
 # interfaces(5) file used by ifup(8) and ifdown(8)
 # Please note that this file is written to be used with dhcpcd
@@ -131,15 +136,11 @@ sudo systemctl enable autohotspot.service
 
 
 ########################################################################################
-# All done!
-# Test without a valid hotspot in /etc/wpa_supplicant/wpa_supplicant.conf
-# and an AP should be generated.
-# Once connected, SSH in with:
-#   ssh pi@192.168.50.5
-# 
-# If you have a valid wifi network in wpa_supplicant.conf, then it should connect. No AP is created.
-#
-# The state of the service can be viewed with the command:
-#   systemctl status autohotspot.service
+# Replace wpa_supplicant.conf with the template file
+sudo mv /etc/wpa_supplicant/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf.backup # Backup old file
+sudo cp wpa_supplicant_default.conf /etc/wpa_supplicant/wpa_supplicant.conf
 
+
+########################################################################################
 echo "Done! Reboot is required"
+exit 0
